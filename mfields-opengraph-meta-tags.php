@@ -74,6 +74,8 @@ class Mfields_Open_Graph_Meta_Tags {
 			'url'         => ''
 			) );
 
+		$output['description'] = wp_strip_all_tags( $output['description'] );
+
 		$output = apply_filters( 'mfields_open_graph_meta_tags', $output );
 
 		return $output;
