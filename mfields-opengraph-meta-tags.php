@@ -26,10 +26,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Mfields_Open_Graph_Meta_Tags::init();
 
 class Mfields_Open_Graph_Meta_Tags {
-	function init() {
+	public static function init() {
 		add_action( 'wp_head', array( __class__, 'print_meta' ) );
 	}
-	public function print_meta() {
+	public static function print_meta() {
 		$data = self::get_meta();
 		foreach( $data as $key => $value ) {
 			if ( empty( $value ) ) {
@@ -49,7 +49,7 @@ class Mfields_Open_Graph_Meta_Tags {
 			print '<meta property="' . esc_attr( $property ) . '" content="' . call_user_func( $esc, $value ) . '">' . "\n";
 		}
 	}
-	public function get_meta() {
+	public static function get_meta() {
 		$output = array();
 		if ( is_home() ) {
 			$output = self::get_meta_home();
@@ -80,7 +80,7 @@ class Mfields_Open_Graph_Meta_Tags {
 
 		return $output;
 	}
-	private function get_meta_home() {
+	private static function get_meta_home() {
 		$output = array(
 			'description' => get_bloginfo( 'description' ),
 			'title'       => get_bloginfo(),
@@ -89,7 +89,7 @@ class Mfields_Open_Graph_Meta_Tags {
 			);
 		return apply_filters( 'mfields_open_graph_meta_tags_home', $output );
 	}
-	private function get_meta_author() {
+	private static function get_meta_author() {
 		global $wp_query;
 
 		$output = array(
@@ -118,7 +118,7 @@ class Mfields_Open_Graph_Meta_Tags {
 		if ( isset( $author->ID ) ) {
 			$output['url'] = get_author_posts_url( $author->ID );
 		}
-		
+
 		$output = apply_filters( 'mfields_open_graph_meta_tags_author', $output, $author );
 		if ( isset( $author->ID ) ) {
 			$output = apply_filters( "mfields_open_graph_meta_tags_author_{$author->ID}", $output, $author );
@@ -126,7 +126,7 @@ class Mfields_Open_Graph_Meta_Tags {
 
 		return $output;
 	}
-	private function get_meta_term() {
+	private static function get_meta_term() {
 		global $wp_query;
 
 		$output = array();
@@ -163,7 +163,7 @@ class Mfields_Open_Graph_Meta_Tags {
 
 		return $output;
 	}
-	private function get_meta_singular() {
+	private static function get_meta_singular() {
 		global $post;
 		setup_postdata( $post );
 
