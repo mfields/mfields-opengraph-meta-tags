@@ -66,6 +66,7 @@ class Mfields_Open_Graph_Meta_Tags {
 
 		$output = wp_parse_args( $output, array(
 			'admins'      => '',
+			'app_id'      => '',
 			'description' => '',
 			'image'       => '',
 			'site_name'   => get_bloginfo(),
