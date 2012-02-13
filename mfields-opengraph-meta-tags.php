@@ -36,8 +36,13 @@ class Mfields_Open_Graph_Meta_Tags {
 				continue;
 			}
 
-			/* Append open grapgh prefix to all keys. */
-			$property = 'og:' . $key;
+			/* Append facebook prefix to specific keys */
+			if( in_array( $key, array( 'admins', 'app_id' ) ) )
+				$property = 'fb: ' . $key;
+				
+			/* Append open graph prefix to all other keys. */
+			else
+				$property = 'og:' . $key;
 
 			/* Determine the appropriate escaping function to use. */
 			$esc = 'esc_attr';
