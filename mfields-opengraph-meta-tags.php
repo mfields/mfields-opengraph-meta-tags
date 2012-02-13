@@ -36,8 +36,13 @@ class Mfields_Open_Graph_Meta_Tags {
 				continue;
 			}
 
-			/* Append open grapgh prefix to all keys. */
-			$property = 'og:' . $key;
+			/* Append facebook prefix to specific keys */
+			if( in_array( $key, array( 'admins', 'app_id' ) ) )
+				$property = 'fb: ' . $key;
+				
+			/* Append open graph prefix to all other keys. */
+			else
+				$property = 'og:' . $key;
 
 			/* Determine the appropriate escaping function to use. */
 			$esc = 'esc_attr';
@@ -66,6 +71,7 @@ class Mfields_Open_Graph_Meta_Tags {
 
 		$output = wp_parse_args( $output, array(
 			'admins'      => '',
+			'app_id'      => '',
 			'description' => '',
 			'image'       => '',
 			'site_name'   => get_bloginfo(),
@@ -210,16 +216,14 @@ class Mfields_Open_Graph_Meta_Tags {
 		 * The filter you want to use is:
 		 * "mfields_open_graph_meta_tags_default_image_id"
 		 */
-		if ( post_type_supports( $post_type, 'thumbnail' ) ) {
-			$post_thumbnail_id = absint( apply_filters( 'mfields_open_graph_meta_tags_default_image_id', 0 ) );
-			if ( has_post_thumbnail() ) {
-				$post_thumbnail_id = get_post_thumbnail_id();
-			}
-			if ( ! empty( $post_thumbnail_id ) ) {
-				$post_thumbnail = wp_get_attachment_image_src( $post_thumbnail_id, 'thumbnail' );
-				if ( isset( $post_thumbnail[0] ) ) {
-					$output['image'] = $post_thumbnail[0];
-				}
+		$post_thumbnail_id = absint( apply_filters( 'mfields_open_graph_meta_tags_default_image_id', 0 ) );
+		if ( has_post_thumbnail() ) {
+			$post_thumbnail_id = get_post_thumbnail_id();
+		}
+		if ( ! empty( $post_thumbnail_id ) ) {
+			$post_thumbnail = wp_get_attachment_image_src( $post_thumbnail_id, 'thumbnail' );
+			if ( isset( $post_thumbnail[0] ) ) {
+				$output['image'] = $post_thumbnail[0];
 			}
 		}
 
