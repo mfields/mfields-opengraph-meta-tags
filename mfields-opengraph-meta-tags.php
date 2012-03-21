@@ -215,6 +215,9 @@ class Mfields_Open_Graph_Meta_Tags {
 			if ( has_post_thumbnail() ) {
 				$post_thumbnail_id = get_post_thumbnail_id();
 			}
+			if( is_attachment() ) {
+				$post_thumbnail_id = get_the_id();
+			}
 			if ( ! empty( $post_thumbnail_id ) ) {
 				$post_thumbnail = wp_get_attachment_image_src( $post_thumbnail_id, 'thumbnail' );
 				if ( isset( $post_thumbnail[0] ) ) {
