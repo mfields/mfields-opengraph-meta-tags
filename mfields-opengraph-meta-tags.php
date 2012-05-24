@@ -72,8 +72,12 @@ class Mfields_Open_Graph_Meta_Tags {
 			'title'       => '',
 			'type'        => 'article',
 			'url'         => '',
-			'locale'      => get_locale(),
+			'locale'      => '',
 			) );
+
+		$locale = get_locale();
+		if ( 'en_US' != get_locale() )
+			$output['locale'] = $locale;
 
 		$output['description'] = wp_strip_all_tags( $output['description'] );
 
