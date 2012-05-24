@@ -2,7 +2,7 @@
 /*
 Plugin Name:       Mfields Open Graph Meta Tags
 Description:       Displays meta information for the open graph protocol on various parts of a WordPress installation.
-Version:           0.1
+Version:           0.2
 Author:            Michael Fields
 Author URI:        http://wordpress.mfields.org/
 License:           GPLv2 or later
