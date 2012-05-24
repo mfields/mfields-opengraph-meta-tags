@@ -25,10 +25,33 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 Mfields_Open_Graph_Meta_Tags::init();
 
+/**
+ * Mfields Open Graph Meta Tags
+ *
+ * @package      Mfields_Open_Graph_Meta_Tags
+ * @author       Michael Fields <michael@mfields.org>
+ * @copyright    Copyright (c) 2011, 2012 Michael Fields
+ * @license      http://opensource.org/licenses/gpl-2.0.php GNU Public License or later
+ * @since        1.0
+ */
 class Mfields_Open_Graph_Meta_Tags {
+
+	/**
+	 * Hook into WordPress.
+	 *
+	 * @since 0.1
+	 */
 	public static function init() {
 		add_action( 'wp_head', array( __class__, 'print_meta' ) );
 	}
+
+	/**
+	 * Print the meta tags to the head of the html document.
+	 *
+	 * Hooked into the "wp_head" action.
+	 *
+	 * @since 0.1
+	 */
 	public static function print_meta() {
 		$data = self::get_meta();
 		foreach( $data as $key => $value ) {
@@ -62,6 +85,12 @@ class Mfields_Open_Graph_Meta_Tags {
 		return $prefix;
 	}
 
+	/**
+	 * Get meta key and value pairs for the current query.
+	 *
+	 * @return array Associative. Keys represent unprefixed meta properties. Values represent unescaped meta content.
+	 * @since 0.1
+	 */
 	public static function get_meta() {
 		$output = array();
 		if ( is_home() ) {
@@ -98,6 +127,13 @@ class Mfields_Open_Graph_Meta_Tags {
 
 		return $output;
 	}
+
+	/**
+	 * Get homepage specific meta key and value pairs.
+	 *
+	 * @return array Associative. Keys represent unprefixed meta properties. Values represent unescaped meta content.
+	 * @since 0.1
+	 */
 	private static function get_meta_home() {
 		$output = array(
 			'description' => get_bloginfo( 'description' ),
@@ -105,8 +141,16 @@ class Mfields_Open_Graph_Meta_Tags {
 			'type'        => 'website',
 			'url'         => site_url(),
 			);
+
 		return apply_filters( 'mfields_open_graph_meta_tags_home', $output );
 	}
+
+	/**
+	 * Get author specific meta key and value pairs.
+	 *
+	 * @return array Associative. Keys represent unprefixed meta properties. Values represent unescaped meta content.
+	 * @since 0.1
+	 */
 	private static function get_meta_author() {
 		global $wp_query;
 
@@ -144,6 +188,13 @@ class Mfields_Open_Graph_Meta_Tags {
 
 		return $output;
 	}
+
+	/**
+	 * Get term specific meta key and value pairs.
+	 *
+	 * @return array Associative. Keys represent unprefixed meta properties. Values represent unescaped meta content.
+	 * @since 0.1
+	 */
 	private static function get_meta_term() {
 		global $wp_query;
 
@@ -181,6 +232,13 @@ class Mfields_Open_Graph_Meta_Tags {
 
 		return $output;
 	}
+
+	/**
+	 * Get post specific meta key and value pairs.
+	 *
+	 * @return array Associative. Keys represent unprefixed meta properties. Values represent unescaped meta content.
+	 * @since 0.1
+	 */
 	private static function get_meta_singular() {
 		global $post;
 		setup_postdata( $post );
@@ -258,6 +316,7 @@ Changelog
 
 = v0.2 =
 
+* Add docblocks for class and all methods.
 * Print the correct prefix for each meta property. props billerickson
 * Only print locale if it is not en_US. props billerickson
 * Bump thumbnail size to 'medium'. props billerickson
