@@ -54,19 +54,17 @@ class Mfields_Open_Graph_Meta_Tags {
 	 */
 	public static function print_meta() {
 		$data = self::get_meta();
-		foreach( $data as $key => $value ) {
-			if ( empty( $value ) ) {
+		foreach ( (array) $data as $key => $value ) {
+			if ( empty( $value ) )
 				continue;
-			}
 
 			/* Append prefix to all keys. */
 			$property = self::get_prefix( $key ) . $key;
 
 			/* Determine the appropriate escaping function to use. */
 			$esc = 'esc_attr';
-			if ( 'url' == $key ) {
+			if ( 'url' == $key )
 				$esc = 'esc_url';
-			}
 
 			/* Print the meta tag. */
 			print '<meta property="' . esc_attr( $property ) . '" content="' . call_user_func( $esc, $value ) . '">' . "\n";
@@ -82,6 +80,7 @@ class Mfields_Open_Graph_Meta_Tags {
 		$prefix = 'og:';
 		if ( in_array( $key, array( 'admins', 'app_id' ) ) )
 			$prefix = 'fb:';
+
 		return $prefix;
 	}
 
@@ -93,18 +92,14 @@ class Mfields_Open_Graph_Meta_Tags {
 	 */
 	public static function get_meta() {
 		$output = array();
-		if ( is_home() ) {
+		if ( is_home() )
 			$output = self::get_meta_home();
-		}
-		else if ( is_singular() || is_front_page() ) {
+		else if ( is_singular() || is_front_page() )
 			$output = self::get_meta_singular();
-		}
-		else if ( is_category() || is_tag() || is_tax() ) {
+		else if ( is_category() || is_tag() || is_tax() )
 			$output = self::get_meta_term();
-		}
-		else if ( is_author() ) {
+		else if ( is_author() )
 			$output = self::get_meta_author();
-		}
 
 		$output = wp_parse_args( $output, array(
 			'admins'      => '',
@@ -140,7 +135,7 @@ class Mfields_Open_Graph_Meta_Tags {
 			'title'       => get_bloginfo(),
 			'type'        => 'website',
 			'url'         => site_url(),
-			);
+		);
 
 		return apply_filters( 'mfields_open_graph_meta_tags_home', $output );
 	}
@@ -156,35 +151,33 @@ class Mfields_Open_Graph_Meta_Tags {
 
 		$output = array(
 			'type' => 'author'
-			);
+		);
 
 		$author = $wp_query->get_queried_object();
-
-		if ( isset( $author->description ) ) {
+		if ( isset( $author->description ) )
 			$output['description'] = $author->description;
-		}
+
 		if ( isset( $author->user_email ) && class_exists( 'DOMDocument' ) ) {
 			$html = get_avatar( $author->user_email, 50 );
 			$img = new DOMDocument();
 			$img->loadHTML( $html );
 			$img_tags = $img->getElementsByTagName( 'img' );
 			if ( 1 == $img_tags->length ) {
-				foreach( $img_tags as $tag ) {
+				foreach ( (array) $img_tags as $tag ) {
 					$output['image'] = $tag->getAttribute( 'src' );
 				}
 			}
 		}
-		if ( isset( $author->display_name ) ) {
+
+		if ( isset( $author->display_name ) )
 			$output['title'] = $author->display_name;
-		}
-		if ( isset( $author->ID ) ) {
+
+		if ( isset( $author->ID ) )
 			$output['url'] = get_author_posts_url( $author->ID );
-		}
 
 		$output = apply_filters( 'mfields_open_graph_meta_tags_author', $output, $author );
-		if ( isset( $author->ID ) ) {
+		if ( isset( $author->ID ) )
 			$output = apply_filters( "mfields_open_graph_meta_tags_author_{$author->ID}", $output, $author );
-		}
 
 		return $output;
 	}
@@ -202,33 +195,28 @@ class Mfields_Open_Graph_Meta_Tags {
 
 		$term = $wp_query->get_queried_object();
 
-		if ( isset( $term->name ) ) {
+		if ( isset( $term->name ) )
 			$output['title'] = $term->name;
-		}
 
-		if ( isset( $term->description ) ) {
+		if ( isset( $term->description ) )
 			$output['description'] = $term->description;
-		}
 
 		if ( isset( $term->term_id ) ) {
 			if ( isset( $term->taxonomy ) ) {
 				$url = get_term_link( $term, $term->taxonomy );
-				if ( ! is_wp_error( $url ) ) {
+				if ( ! is_wp_error( $url ) )
 					$output['url'] = $url;
-				}
 			}
 			if ( function_exists( 'taxonomy_images_plugin_get_archive_image_src' ) ) {
 				$image = taxonomy_images_plugin_get_archive_image_src( $term->term_id );
-				if ( ! empty( $image ) ) {
+				if ( ! empty( $image ) )
 					$output['image'] = $image;
-				}
 			}
 		}
 
 		$output = apply_filters( 'mfields_open_graph_meta_tags_term', $output, $term );
-		if ( isset( $term->taxonomy ) ) {
+		if ( isset( $term->taxonomy ) )
 			$output = apply_filters( "mfields_open_graph_meta_tags_term_{$term->taxonomy}", $output, $term );
-		}
 
 		return $output;
 	}
@@ -256,25 +244,23 @@ class Mfields_Open_Graph_Meta_Tags {
 		 * early.
 		 */
 		$permalink = esc_url( get_permalink() );
-		if ( empty( $permalink ) ) {
+		if ( empty( $permalink ) )
 			return;
-		}
+
 		$output['url'] = $permalink;
 
 		/* Use the title only if this post_type supports it. */
 		if ( post_type_supports( $post_type, 'title' ) ) {
 			$title = apply_filters( 'the_title', get_the_title() );
-			if ( ! empty( $title ) ) {
+			if ( ! empty( $title ) )
 				$output['title'] = $title;
-			}
 		}
 
 		/* Use the excerpt only if this post_type supports it. */
 		if ( post_type_supports( $post_type, 'excerpt' ) || post_type_supports( $post_type, 'editor' ) ) {
 			$excerpt = apply_filters( 'the_excerpt', get_the_excerpt() );
-			if ( ! empty( $excerpt ) ) {
+			if ( ! empty( $excerpt ) )
 				$output['description'] = $excerpt;
-			}
 		}
 
 		/*
@@ -287,12 +273,12 @@ class Mfields_Open_Graph_Meta_Tags {
 		 */
 		if ( post_type_supports( $post_type, 'thumbnail' ) ) {
 			$post_thumbnail_id = absint( apply_filters( 'mfields_open_graph_meta_tags_default_image_id', 0 ) );
-			if ( has_post_thumbnail() ) {
+			if ( has_post_thumbnail() )
 				$post_thumbnail_id = get_post_thumbnail_id();
-			}
-			if( is_attachment() ) {
+
+			if ( is_attachment() )
 				$post_thumbnail_id = get_the_id();
-			}
+
 			if ( ! empty( $post_thumbnail_id ) ) {
 				$post_thumbnail = wp_get_attachment_image_src( $post_thumbnail_id, 'medium' );
 				if ( isset( $post_thumbnail[0] ) ) {
@@ -316,10 +302,11 @@ Changelog
 
 = v0.2 =
 
-* Add docblocks for class and all methods.
-* Print the correct prefix for each meta property. props billerickson
-* Only print locale if it is not en_US. props billerickson
 * Bump thumbnail size to 'medium'. props billerickson
+* Only print locale if it is not en_US. props billerickson
+* Print the correct prefix for each meta property. props billerickson
+* Add docblocks for class and all methods.
+* Coding Stardards.
 
 = v0.1 =
 
