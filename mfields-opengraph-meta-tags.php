@@ -36,8 +36,8 @@ class Mfields_Open_Graph_Meta_Tags {
 				continue;
 			}
 
-			/* Append open grapgh prefix to all keys. */
-			$property = 'og:' . $key;
+			/* Append prefix to all keys. */
+			$property = self::get_prefix( $key ) . $key;
 
 			/* Determine the appropriate escaping function to use. */
 			$esc = 'esc_attr';
@@ -49,6 +49,19 @@ class Mfields_Open_Graph_Meta_Tags {
 			print '<meta property="' . esc_attr( $property ) . '" content="' . call_user_func( $esc, $value ) . '">' . "\n";
 		}
 	}
+
+	/**
+	 * Get meta property prefix.
+	 *
+	 * @since 0.2
+	 */
+	public static function get_prefix( $key ) {
+		$prefix = 'og:';
+		if ( in_array( $key, array( 'admins', 'app_id' ) ) )
+			$prefix = 'fb:';
+		return $prefix;
+	}
+
 	public static function get_meta() {
 		$output = array();
 		if ( is_home() ) {
@@ -245,6 +258,8 @@ Changelog
 
 = v0.2 =
 
+* Print the correct prefix for each meta property. props billerickson
+* Only print locale if it is not en_US. props billerickson
 * Bump thumbnail size to 'medium'. props billerickson
 
 = v0.1 =
